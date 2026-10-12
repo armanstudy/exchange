@@ -1,0 +1,49 @@
+<UserControl x:Class="LenjExchange.Desktop.Views.RatesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:v="clr-namespace:LenjExchange.Desktop.Views"
+             xmlns:vm="clr-namespace:LenjExchange.Desktop.ViewModels">
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Visibility="{Binding CanManage, Converter={StaticResource BoolToVis}}">
+            <StackPanel>
+                <TextBlock Text="ثبت نرخ روز (فقط برای پیش‌فرض فرم‌ها؛ اسناد قبلی تغییر نمی‌کنند)" Style="{StaticResource SectionTitle}" />
+                <WrapPanel>
+                    <StackPanel Margin="0,0,10,0">
+                        <TextBlock Text="تاریخ" Style="{StaticResource FieldLabel}" />
+                        <TextBox Text="{Binding Date, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" Width="110" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,10,0">
+                        <TextBlock Text="ارز پایه (۱ واحد)" Style="{StaticResource FieldLabel}" />
+                        <ComboBox ItemsSource="{x:Static vm:ViewModelBase.AllCurrencies}" SelectedItem="{Binding BaseCurrency}" Width="90" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,10,0">
+                        <TextBlock Text="ارز مقابل" Style="{StaticResource FieldLabel}" />
+                        <ComboBox ItemsSource="{x:Static vm:ViewModelBase.AllCurrencies}" SelectedItem="{Binding QuoteCurrency}" Width="90" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,10,0">
+                        <TextBlock Text="نرخ" Style="{StaticResource FieldLabel}" />
+                        <TextBox Text="{Binding Rate, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" Width="140" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,10,0">
+                        <TextBlock Text="یادداشت" Style="{StaticResource FieldLabel}" />
+                        <TextBox Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" Width="180" />
+                    </StackPanel>
+                    <Button Content="ثبت نرخ" Command="{Binding SaveCommand}" VerticalAlignment="Bottom" Margin="0,0,8,0" />
+                    <Button Content="ویرایش نرخ انتخاب‌شده" Command="{Binding EditCommand}" Style="{StaticResource SecondaryButton}" VerticalAlignment="Bottom" />
+                </WrapPanel>
+                <TextBlock Text="{Binding Preview}" FlowDirection="LeftToRight" HorizontalAlignment="Right" Foreground="{StaticResource PrimaryBrush}" FontWeight="Bold" Margin="0,8,0,0" />
+            </StackPanel>
+        </Border>
+        <v:MessageBar DockPanel.Dock="Top" />
+        <DataGrid ItemsSource="{Binding Items}" SelectedItem="{Binding Selected}" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="تاریخ" Binding="{Binding Date}" />
+                <DataGridTextColumn Header="جفت ارز" Binding="{Binding Pair}" />
+                <DataGridTextColumn Header="نرخ" Binding="{Binding Rate}" />
+                <DataGridTextColumn Header="شرح" Binding="{Binding Text}" />
+                <DataGridTextColumn Header="یادداشت" Binding="{Binding Notes}" Width="*" />
+                <DataGridTextColumn Header="ثبت‌کننده" Binding="{Binding CreatedBy}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

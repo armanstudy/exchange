@@ -1,0 +1,98 @@
+<UserControl x:Class="LenjExchange.Desktop.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:v="clr-namespace:LenjExchange.Desktop.Views">
+    <UserControl.Resources>
+        <DataTemplate x:Key="BalanceItem">
+            <DockPanel Margin="0,3">
+                <TextBlock DockPanel.Dock="Right" Text="{Binding Amounts}" FlowDirection="LeftToRight" FontWeight="Bold" />
+                <TextBlock Text="{Binding Name}" />
+            </DockPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                <Button Content="ثبت رسید جدید" Command="{Binding NewReceiptCommand}" Margin="0,0,8,0" />
+                <Button Content="پرونده‌ها" Command="{Binding OpenCasesPageCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0" />
+                <Button Content="به‌روزرسانی" Command="{Binding RefreshCommand}" Style="{StaticResource SecondaryButton}" />
+            </StackPanel>
+            <v:MessageBar />
+
+            <UniformGrid Columns="3" Margin="0,4">
+                <Border Style="{StaticResource StatCard}">
+                    <StackPanel>
+                        <TextBlock Text="دریافتی امروز" Style="{StaticResource Muted}" />
+                        <TextBlock Text="{Binding TodayReceipts}" FontSize="16" FontWeight="Bold" TextWrapping="Wrap" FlowDirection="LeftToRight" HorizontalAlignment="Right" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource StatCard}">
+                    <StackPanel>
+                        <TextBlock Text="پرداختی امروز" Style="{StaticResource Muted}" />
+                        <TextBlock Text="{Binding TodayPayments}" FontSize="16" FontWeight="Bold" TextWrapping="Wrap" FlowDirection="LeftToRight" HorizontalAlignment="Right" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource StatCard}">
+                    <StackPanel>
+                        <TextBlock Text="تعداد مشتریان" Style="{StaticResource Muted}" />
+                        <TextBlock Text="{Binding CustomerCount}" FontSize="22" FontWeight="Bold" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource StatCard}">
+                    <StackPanel>
+                        <TextBlock Text="پرونده‌های باز" Style="{StaticResource Muted}" />
+                        <TextBlock Text="{Binding OpenCases}" FontSize="22" FontWeight="Bold" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource StatCard}">
+                    <StackPanel>
+                        <TextBlock Text="پرونده‌های تسویه‌شده" Style="{StaticResource Muted}" />
+                        <TextBlock Text="{Binding SettledCases}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource SuccessBrush}" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource StatCard}">
+                    <StackPanel>
+                        <TextBlock Text="پرونده‌های دارای مغایرت" Style="{StaticResource Muted}" />
+                        <TextBlock Text="{Binding DiscrepancyCases}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource DangerBrush}" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <UniformGrid Columns="3" Margin="0,4">
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="تعهد باقی‌مانده صرافی‌ها" Style="{StaticResource SectionTitle}" />
+                        <ItemsControl ItemsSource="{Binding ExchangerOutstanding}" ItemTemplate="{StaticResource BalanceItem}" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="دلار نزد نمایندگان" Style="{StaticResource SectionTitle}" />
+                        <ItemsControl ItemsSource="{Binding AgentUsdHeld}" ItemTemplate="{StaticResource BalanceItem}" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="دریافتی گیرندگان در چین" Style="{StaticResource SectionTitle}" />
+                        <ItemsControl ItemsSource="{Binding RecipientReceipts}" ItemTemplate="{StaticResource BalanceItem}" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="آخرین تراکنش‌ها" Style="{StaticResource SectionTitle}" />
+                    <DataGrid ItemsSource="{Binding Latest}" AutoGenerateColumns="False" IsReadOnly="True" MaxHeight="360">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="شماره سند" Binding="{Binding EntryNumber}" />
+                            <DataGridTextColumn Header="تاریخ" Binding="{Binding Date}" />
+                            <DataGridTextColumn Header="نوع" Binding="{Binding Type}" />
+                            <DataGridTextColumn Header="شرح" Binding="{Binding Description}" Width="*" />
+                            <DataGridTextColumn Header="وضعیت" Binding="{Binding Status}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

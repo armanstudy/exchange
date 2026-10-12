@@ -1,0 +1,90 @@
+<UserControl x:Class="LenjExchange.Desktop.Views.ExchangersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:v="clr-namespace:LenjExchange.Desktop.Views">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="330" />
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Column="0" Margin="0,0,12,0">
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,6">
+                <TextBlock Text="صرافی:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <ComboBox ItemsSource="{Binding Exchangers}" SelectedItem="{Binding ExchangerFilter}" Width="180" Margin="0,0,6,0" />
+                <Button Content="همه" Command="{Binding RefreshCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,6,0" />
+                <Button Content="افزودن صرافی" Command="{Binding AddExchangerCommand}" Style="{StaticResource SecondaryButton}"
+                        Visibility="{Binding CanManageMasterData, Converter={StaticResource BoolToVis}}" />
+            </StackPanel>
+            <v:MessageBar DockPanel.Dock="Top" />
+            <Border DockPanel.Dock="Bottom" Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="تحویل دلار به نماینده (برای تعهد انتخاب‌شده)" Style="{StaticResource SectionTitle}" />
+                    <WrapPanel>
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock Text="نماینده" Style="{StaticResource FieldLabel}" />
+                            <ComboBox ItemsSource="{Binding Agents}" SelectedItem="{Binding DeliveryAgent}" Width="150" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock Text="مبلغ (USD)" Style="{StaticResource FieldLabel}" />
+                            <TextBox Text="{Binding DeliveryAmount, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" Width="120" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock Text="تاریخ" Style="{StaticResource FieldLabel}" />
+                            <TextBox Text="{Binding DeliveryDate, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" Width="110" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock Text="کد پیگیری صرافی (اختیاری)" Style="{StaticResource FieldLabel}" />
+                            <TextBox Text="{Binding DeliveryExternalNo, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" Width="150" />
+                        </StackPanel>
+                        <Button Content="ثبت تحویل" Command="{Binding RegisterDeliveryCommand}" VerticalAlignment="Bottom" Margin="0,0,8,0" />
+                        <Button Content="آماده تحویل" Command="{Binding MarkReadyCommand}" Style="{StaticResource SecondaryButton}" VerticalAlignment="Bottom" Margin="0,0,8,0" />
+                        <Button Content="برگشت تعهد" Command="{Binding ReverseCommand}" Style="{StaticResource DangerButton}" VerticalAlignment="Bottom"
+                                Visibility="{Binding CanReverse, Converter={StaticResource BoolToVis}}" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+            <DataGrid ItemsSource="{Binding Items}" SelectedItem="{Binding Selected}" AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="پرونده" Binding="{Binding CaseNumber}" />
+                    <DataGridTextColumn Header="صرافی" Binding="{Binding Exchanger}" />
+                    <DataGridTextColumn Header="تاریخ" Binding="{Binding Date}" />
+                    <DataGridTextColumn Header="پرداختی" Binding="{Binding Paid}" />
+                    <DataGridTextColumn Header="نرخ" Binding="{Binding Rate}" />
+                    <DataGridTextColumn Header="تعهد" Binding="{Binding Committed}" />
+                    <DataGridTextColumn Header="تحویل‌شده" Binding="{Binding Delivered}" />
+                    <DataGridTextColumn Header="باقی‌مانده" Binding="{Binding Outstanding}" />
+                    <DataGridTextColumn Header="آمادگی" Binding="{Binding ReadyText}" />
+                    <DataGridTextColumn Header="وضعیت" Binding="{Binding Status}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+
+        <Border Grid.Column="1" Style="{StaticResource Card}" VerticalAlignment="Top">
+            <StackPanel>
+                <TextBlock Text="ثبت تعهد جدید صرافی" Style="{StaticResource SectionTitle}" />
+                <TextBlock Text="پرونده *" Style="{StaticResource FieldLabel}" />
+                <ComboBox ItemsSource="{Binding OpenCases}" SelectedItem="{Binding FormCase}" />
+                <TextBlock Text="صرافی *" Style="{StaticResource FieldLabel}" />
+                <ComboBox ItemsSource="{Binding Exchangers}" SelectedItem="{Binding FormExchanger}" />
+                <TextBlock Text="تاریخ" Style="{StaticResource FieldLabel}" />
+                <TextBox Text="{Binding FormDate, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                <TextBlock Text="مبلغ پرداختی به صرافی *" Style="{StaticResource FieldLabel}" />
+                <DockPanel>
+                    <ComboBox DockPanel.Dock="Left" ItemsSource="{Binding IranianCurrencies}" SelectedItem="{Binding FormPaidCurrency}" Width="70" Margin="6,0,0,0" />
+                    <TextBox Text="{Binding FormPaid, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                </DockPanel>
+                <TextBlock Text="نرخ: هر ۱ USD چند تومان؟ *" Style="{StaticResource FieldLabel}" />
+                <DockPanel>
+                    <Button DockPanel.Dock="Left" Content="آخرین نرخ" Command="{Binding LoadLatestRateCommand}" Style="{StaticResource SecondaryButton}" Margin="6,0,0,0" />
+                    <TextBox Text="{Binding FormRate, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                </DockPanel>
+                <TextBlock Text="{Binding FormPreview}" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}" Margin="0,6,0,0" />
+                <TextBlock Text="پرداخت از بانک (اختیاری؛ خالی = صندوق)" Style="{StaticResource FieldLabel}" />
+                <ComboBox ItemsSource="{Binding Banks}" SelectedItem="{Binding FormBank}" />
+                <TextBlock Text="یادداشت" Style="{StaticResource FieldLabel}" />
+                <TextBox Text="{Binding FormNotes, UpdateSourceTrigger=PropertyChanged}" />
+                <Button Content="ثبت تعهد" Command="{Binding CreateCommitmentCommand}" Margin="0,12,0,0" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

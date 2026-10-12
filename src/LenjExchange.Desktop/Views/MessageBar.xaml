@@ -1,0 +1,10 @@
+<UserControl x:Class="LenjExchange.Desktop.Views.MessageBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel Margin="0,4">
+        <TextBlock Text="{Binding ErrorMessage}" Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap" FontWeight="Bold" />
+        <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource SuccessBrush}" TextWrapping="Wrap" />
+        <ProgressBar IsIndeterminate="True" Height="3" Margin="0,2,0,0" Foreground="{StaticResource PrimaryBrush}"
+                     Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}" />
+    </StackPanel>
+</UserControl>

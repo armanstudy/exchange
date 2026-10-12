@@ -1,0 +1,29 @@
+<UserControl x:Class="LenjExchange.Desktop.Views.BackupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:v="clr-namespace:LenjExchange.Desktop.Views">
+    <DockPanel>
+        <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,6">
+            <Button Content="پشتیبان‌گیری الان" Command="{Binding CreateCommand}" Margin="0,0,8,6" />
+            <Button Content="پشتیبان در پوشه دلخواه (فلش/دیسک دیگر)" Command="{Binding CreateToCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,8,6" />
+            <Button Content="بررسی صحت فایل پشتیبان" Command="{Binding VerifyCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,8,6" />
+            <Button Content="بررسی سلامت پایگاه داده" Command="{Binding CheckLiveCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,8,6" />
+            <Button Content="باز کردن پوشه" Command="{Binding OpenFolderCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,24,6" />
+            <Button Content="بازیابی از پشتیبان…" Command="{Binding RestoreCommand}" Style="{StaticResource DangerButton}" Margin="0,0,8,6"
+                    Visibility="{Binding CanRestore, Converter={StaticResource BoolToVis}}" />
+        </WrapPanel>
+        <v:MessageBar DockPanel.Dock="Top" />
+        <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Visibility="{Binding VerificationResult, Converter={StaticResource NullToCollapsed}}">
+            <TextBlock Text="{Binding VerificationResult}" TextWrapping="Wrap" />
+        </Border>
+        <TextBlock DockPanel.Dock="Top" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,6"
+                   Text="هر فایل پشتیبان شامل پایگاه داده، همه پیوست‌ها و فهرست هش SHA-256 است. اگر سطری انتخاب نشده باشد، برای بررسی/بازیابی فایل از شما پرسیده می‌شود." />
+        <DataGrid ItemsSource="{Binding Items}" SelectedItem="{Binding Selected}" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="فایل" Binding="{Binding FileName}" Width="*" />
+                <DataGridTextColumn Header="تاریخ" Binding="{Binding Date}" />
+                <DataGridTextColumn Header="حجم" Binding="{Binding Size}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>
