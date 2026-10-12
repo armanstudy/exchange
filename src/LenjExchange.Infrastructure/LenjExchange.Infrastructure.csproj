@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Assets\Fonts\*.ttf" LogicalName="LenjExchange.Fonts.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Assets\Logo\lenj-logo.png" LogicalName="LenjExchange.Logo.lenj-logo.png" />
     <None Include="Assets\Fonts\OFL.txt" CopyToOutputDirectory="PreserveNewest" Link="Licenses\Vazirmatn-OFL.txt" />
   </ItemGroup>
 

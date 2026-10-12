@@ -12,7 +12,7 @@ public static partial class BidiText
     public const char Lre = '\u202A';
     public const char Pdf = '\u202C';
 
-    [GeneratedRegex(@"[0-9A-Za-z(][0-9A-Za-z ,.=:/\-()]*[0-9A-Za-z)]|[0-9A-Za-z]")]
+    [GeneratedRegex(@"[0-9A-Za-z(+][0-9A-Za-z ,.=:/\-()+@_|]*[0-9A-Za-z)]|[0-9A-Za-z]")]
     private static partial Regex LatinRun();
 
     public static string IsolateLatinRuns(string? text)

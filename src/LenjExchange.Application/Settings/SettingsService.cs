@@ -12,15 +12,28 @@ namespace LenjExchange.Application.Settings;
 /// <summary>Header printed on receipts and reports. All values are editable in Settings.</summary>
 public sealed record CompanyHeader
 {
-    public string PersianName { get; init; } = "شرکت بازرگانی لنج – برادران بارگاهی – واردات و صادرات";
+    public string PersianName { get; init; } = "شرکت بازرگانی لنج – برادران بارگاهی - واردات و صادرات";
     public string EnglishName { get; init; } = "YIWU LENGJI IMPORT AND EXPORT CO., LTD";
-    /// <summary>Placeholder until the real contact details are provided (open question).</summary>
-    public string ContactLine { get; init; } = "تلفن: ——— | واتس‌اپ/وی‌چت: ——— | نشانی: ———";
+
+    public string ChinaLabel { get; init; } = "چین";
+    public string ChinaAddress { get; init; } = "Yiwu City, Zhejiang, China";
+    public string ChinaContact { get; init; } = "+86 150 8826 0579  |  Yiwulenj@gmail.com";
+    public string IranLabel { get; init; } = "ایران";
+    public string IranAddress { get; init; } = "تهران، بازار بزرگ";
+    /// <summary>The template repeats the same Iran number twice; only one is used until a second number is confirmed.</summary>
+    public string IranContact { get; init; } = "+98917 177 2028";
+    public string FooterText { get; init; } = "این رسید در دو نسخه تنظیم و یک نسخه به پرداخت‌کننده تسلیم گردید.";
+
+    /// <summary>Custom logo file; null uses the embedded LENJ ship's-wheel logo.</summary>
     public string? LogoPath { get; init; }
     public string PrimaryColor { get; init; } = "#0B2F5B";
+    public string SecondaryColor { get; init; } = "#41282E";
     public string LightColor { get; init; } = "#EEF2F7";
     public string BackgroundColor { get; init; } = "#F5F8FB";
     public string MutedTextColor { get; init; } = "#526174";
+    public string SubtleTextColor { get; init; } = "#6B7A8C";
+    public string BorderColor { get; init; } = "#B9C2CE";
+    public string TextColor { get; init; } = "#1A1A1A";
 }
 
 public sealed record NumberingSettings

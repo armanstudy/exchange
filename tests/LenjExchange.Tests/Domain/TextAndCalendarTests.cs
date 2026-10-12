@@ -42,6 +42,17 @@ public class TextAndCalendarTests
         Assert.Equal("کریم", DigitNormalizer.NormalizeLetters("كريم"));
     }
 
+    [Theory]
+    [InlineData("نرخ: 1 USD = 100,000 IRT", "نرخ: \u202A1 USD = 100,000 IRT\u202C")]
+    [InlineData("+98917 177 2028", "\u202A+98917 177 2028\u202C")]
+    [InlineData("+86 150 8826 0579  |  Yiwulenj@gmail.com", "\u202A+86 150 8826 0579  |  Yiwulenj@gmail.com\u202C")]
+    [InlineData("فقط فارسی", "فقط فارسی")]
+    public void Latin_runs_are_isolated_for_rtl_rendering(string input, string expected)
+    {
+        Assert.Equal(expected, BidiText.IsolateLatinRuns(input));
+        Assert.Equal(input, BidiText.Strip(BidiText.IsolateLatinRuns(input)));
+    }
+
     [Fact]
     public void Shamsi_round_trip_and_known_dates()
     {

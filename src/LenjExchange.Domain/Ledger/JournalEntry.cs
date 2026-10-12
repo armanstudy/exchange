@@ -26,6 +26,33 @@ public enum OperationType
     OpeningBalance = 11
 }
 
+public static class LedgerText
+{
+    public static string Persian(OperationType t) => t switch
+    {
+        OperationType.CustomerReceipt => "دریافت از مشتری",
+        OperationType.ExchangerCommitment => "تعهد صرافی",
+        OperationType.AgentDelivery => "تحویل به نماینده",
+        OperationType.ChinaDispatch => "ارسال به چین",
+        OperationType.ChinaReceipt => "دریافت در چین",
+        OperationType.CustomerPayment => "پرداخت به مشتری",
+        OperationType.FxConversion => "تبدیل ارز",
+        OperationType.Fee => "کارمزد",
+        OperationType.Adjustment => "اصلاحیه",
+        OperationType.Reversal => "برگشت سند",
+        OperationType.OpeningBalance => "مانده افتتاحیه",
+        _ => t.ToString()
+    };
+
+    public static string Persian(JournalStatus s) => s switch
+    {
+        JournalStatus.Draft => "پیش‌نویس",
+        JournalStatus.Posted => "قطعی",
+        JournalStatus.Reversed => "برگشت‌خورده",
+        _ => s.ToString()
+    };
+}
+
 public class JournalLine : Entity
 {
     public Guid JournalEntryId { get; private set; }
