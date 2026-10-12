@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>12.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Company>شرکت بازرگانی لنج – برادران بارگاهی</Company>
+    <Product>سامانه مالی لنج | LENJ Exchange Manager</Product>
+    <Version>0.1.0</Version>
+    <NeutralLanguage>fa-IR</NeutralLanguage>
+  </PropertyGroup>
+  <PropertyGroup>
+    <EfCoreVersion>8.0.31</EfCoreVersion>
+    <MsExtVersion>8.0.1</MsExtVersion>
+  </PropertyGroup>
+</Project>
