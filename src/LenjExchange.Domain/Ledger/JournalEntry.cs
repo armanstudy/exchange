@@ -120,11 +120,40 @@ public class JournalEntry : Entity
     public JournalEntry Credit(Guid accountId, Money money, string? description = null, decimal? baseRate = null) =>
         AddLine(accountId, money.Currency, 0m, money.Amount, description, baseRate);
 
+    private readonly List<ExchangeRate> _historicRates = new();
+
+    /// <summary>
+    /// Registers the document's rate snapshots so subsequent lines get a base-currency equivalent
+    /// (<see cref="JournalLine.BaseRate"/>) without looking up today's rates.
+    /// </summary>
+    public JournalEntry UseHistoricRates(params ExchangeRate?[] rates)
+    {
+        _historicRates.AddRange(rates.Where(r => r is not null)!);
+        return this;
+    }
+
+    private decimal? ResolveBaseRate(CurrencyCode currency)
+    {
+        if (BaseCurrency is not { } bc) return null;
+        if (currency == bc) return 1m;
+        if (currency == CurrencyCode.IRR && bc == CurrencyCode.IRT) return 1m / Currencies.RialPerToman;
+        if (currency == CurrencyCode.IRT && bc == CurrencyCode.IRR) return Currencies.RialPerToman;
+        foreach (var r in _historicRates)
+        {
+            try
+            {
+                if (r.Involves(currency) && r.Involves(bc)) return r.FactorFor(currency, bc);
+            }
+            catch (DomainException) { }
+        }
+        return null;
+    }
+
     public JournalEntry AddLine(Guid accountId, CurrencyCode currency, decimal debit, decimal credit,
         string? description = null, decimal? baseRate = null)
     {
         EnsureDraft();
-        var rate = baseRate ?? (BaseCurrency == currency ? 1m : null);
+        var rate = baseRate ?? ResolveBaseRate(currency);
         _lines.Add(new JournalLine(Id, _lines.Count + 1, accountId, currency, debit, credit, rate, BaseCurrency, description));
         return this;
     }
