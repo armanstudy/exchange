@@ -1,0 +1,144 @@
+<UserControl x:Class="LenjExchange.Desktop.Views.NewReceiptView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:v="clr-namespace:LenjExchange.Desktop.Views"
+             xmlns:vm="clr-namespace:LenjExchange.Desktop.ViewModels"
+             x:Name="Root">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <v:MessageBar />
+            <Border Style="{StaticResource Card}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="مشتری (پرداخت‌کننده) *" Style="{StaticResource FieldLabel}" />
+                        <ComboBox ItemsSource="{Binding CustomerOptions}" SelectedItem="{Binding Customer}" IsEditable="True" IsTextSearchEnabled="True" />
+                        <TextBlock Text="تاریخ رسید (شمسی) *" Style="{StaticResource FieldLabel}" />
+                        <TextBox Text="{Binding Date, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                        <TextBlock Text="گیرنده نهایی (اختیاری)" Style="{StaticResource FieldLabel}" />
+                        <ComboBox ItemsSource="{Binding RecipientOptions}" SelectedItem="{Binding Recipient}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="مبلغ دریافتی *" Style="{StaticResource FieldLabel}" />
+                        <TextBox Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                        <TextBlock Text="ارز دریافتی" Style="{StaticResource FieldLabel}" />
+                        <ComboBox ItemsSource="{x:Static vm:ViewModelBase.AllCurrencies}" SelectedItem="{Binding Currency}" />
+                        <TextBlock Text="ارز تعهد به مشتری" Style="{StaticResource FieldLabel}" />
+                        <ComboBox ItemsSource="{x:Static vm:ViewModelBase.AllCurrencies}" SelectedItem="{Binding TargetCurrency}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="4">
+                        <StackPanel Visibility="{Binding NeedsRate, Converter={StaticResource BoolToVis}}">
+                            <TextBlock Text="{Binding RateLabel}" Style="{StaticResource FieldLabel}" />
+                            <DockPanel>
+                                <Button DockPanel.Dock="Left" Content="آخرین نرخ" Command="{Binding LoadLatestRateCommand}" Style="{StaticResource SecondaryButton}" Margin="6,0,0,0" />
+                                <TextBox Text="{Binding Rate, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                            </DockPanel>
+                        </StackPanel>
+                        <TextBlock Text="{Binding ConversionPreview}" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}" Margin="0,10,0,0" TextWrapping="Wrap" />
+                        <TextBlock Text="شرح / بابت" Style="{StaticResource FieldLabel}" />
+                        <TextBox Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="54" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <DockPanel>
+                        <Button DockPanel.Dock="Left" Content="+ افزودن واریز" Command="{Binding AddDepositCommand}" Style="{StaticResource SecondaryButton}" />
+                        <TextBlock Text="واریزهای بانکی (اگر خالی بماند، دریافت نقدی ثبت می‌شود)" Style="{StaticResource SectionTitle}" />
+                    </DockPanel>
+                    <DataGrid ItemsSource="{Binding Deposits}" AutoGenerateColumns="False" CanUserAddRows="False" MinHeight="80">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="بانک" Width="170">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox IsEditable="True" Text="{Binding BankName, UpdateSourceTrigger=PropertyChanged}"
+                                                  ItemsSource="{Binding DataContext.BankNames, ElementName=Root}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="تاریخ" Width="110">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate><TextBox Text="{Binding Date, UpdateSourceTrigger=PropertyChanged}" FlowDirection="LeftToRight" /></DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="مبلغ" Width="150">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate><TextBox Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}" FlowDirection="LeftToRight" /></DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="ارز" Width="80">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate><ComboBox ItemsSource="{x:Static vm:ViewModelBase.AllCurrencies}" SelectedItem="{Binding Currency}" /></DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="شماره پیگیری" Width="170">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate><TextBox Text="{Binding TrackingNo, UpdateSourceTrigger=PropertyChanged}" FlowDirection="LeftToRight" /></DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="واریزکننده" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate><TextBox Text="{Binding Depositor, UpdateSourceTrigger=PropertyChanged}" /></DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Width="70">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="حذف" Style="{StaticResource DangerButton}" Padding="6,2"
+                                                Command="{Binding DataContext.RemoveDepositCommand, ElementName=Root}" CommandParameter="{Binding}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="پیوست‌ها (فیش، تصویر رسید …)" Style="{StaticResource SectionTitle}" />
+                    <StackPanel Orientation="Horizontal">
+                        <ComboBox x:Name="DocType" ItemsSource="{Binding DocTypes}" SelectedIndex="0" Width="200" Margin="0,0,8,0" />
+                        <Button Content="انتخاب فایل" Command="{Binding AddAttachmentCommand}" CommandParameter="{Binding SelectedItem, ElementName=DocType}" Style="{StaticResource SecondaryButton}" />
+                    </StackPanel>
+                    <ItemsControl ItemsSource="{Binding Attachments}" Margin="0,6,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="0,2">
+                                    <TextBlock Text="{Binding FileName}" VerticalAlignment="Center" Margin="0,0,10,0" />
+                                    <Button Content="حذف" Style="{StaticResource DangerButton}" Padding="6,1"
+                                            Command="{Binding DataContext.RemoveAttachmentCommand, ElementName=Root}" CommandParameter="{Binding}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource WarningBox}" Visibility="{Binding Warning, Converter={StaticResource NullToCollapsed}}">
+                <TextBlock Text="{Binding Warning}" TextWrapping="Wrap" />
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <WrapPanel>
+                    <Button Content="بررسی مغایرت و تکرار" Command="{Binding CheckCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,8,6" />
+                    <Button Content="ثبت نهایی رسید" Command="{Binding RegisterCommand}" Margin="0,0,24,6" />
+                    <TextBlock Text="کاغذ:" VerticalAlignment="Center" Margin="0,0,6,6" />
+                    <ComboBox ItemsSource="{Binding PaperSizes}" SelectedItem="{Binding Paper}" Width="70" Margin="0,0,8,6" />
+                    <Button Content="ساخت و نمایش PDF" Command="{Binding GeneratePdfCommand}" IsEnabled="{Binding IsRegistered}" Style="{StaticResource SecondaryButton}" Margin="0,0,8,6" />
+                    <Button Content="چاپ" Command="{Binding PrintCommand}" IsEnabled="{Binding IsRegistered}" Visibility="{Binding CanPrint, Converter={StaticResource BoolToVis}}" Style="{StaticResource SecondaryButton}" Margin="0,0,8,6" />
+                    <Button Content="باز کردن پوشه" Command="{Binding OpenFolderCommand}" IsEnabled="{Binding IsRegistered}" Style="{StaticResource SecondaryButton}" Margin="0,0,24,6" />
+                    <Button Content="رسید جدید" Command="{Binding NewReceiptCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,8,6" />
+                </WrapPanel>
+            </Border>
+            <TextBlock Text="{Binding RegisteredNumber, StringFormat='شماره رسید ثبت‌شده: {0}'}" FontSize="16" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

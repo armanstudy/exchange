@@ -1,0 +1,32 @@
+<UserControl x:Class="LenjExchange.Desktop.Views.AttachmentsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:v="clr-namespace:LenjExchange.Desktop.Views">
+    <DockPanel>
+        <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,6">
+            <TextBlock Text="مشتری:" VerticalAlignment="Center" Margin="0,0,6,0" />
+            <ComboBox ItemsSource="{Binding Customers}" SelectedItem="{Binding CustomerFilter}" IsEditable="True" Width="220" Margin="0,0,6,0" />
+            <Button Content="همه مشتریان" Command="{Binding ClearFilterCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,12,0" />
+            <TextBlock Text="نوع:" VerticalAlignment="Center" Margin="0,0,6,0" />
+            <ComboBox ItemsSource="{Binding TypeFilters}" SelectedItem="{Binding TypeFilter}" Width="170" Margin="0,0,24,0" />
+            <ComboBox ItemsSource="{Binding DocTypes}" SelectedItem="{Binding NewType}" Width="170" Margin="0,0,6,0" />
+            <Button Content="افزودن پیوست" Command="{Binding AddCommand}" Margin="0,0,6,0" />
+            <Button Content="باز کردن" Command="{Binding OpenCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,6,0" />
+            <Button Content="بررسی سلامت فایل‌ها" Command="{Binding VerifyCommand}" Style="{StaticResource SecondaryButton}" />
+        </WrapPanel>
+        <v:MessageBar DockPanel.Dock="Top" />
+        <DataGrid ItemsSource="{Binding Items}" SelectedItem="{Binding Selected}" AutoGenerateColumns="False" IsReadOnly="True"
+                  MouseDoubleClick="OnDoubleClick">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="نام فایل" Binding="{Binding FileName}" Width="*" />
+                <DataGridTextColumn Header="نوع" Binding="{Binding Type}" />
+                <DataGridTextColumn Header="مشتری" Binding="{Binding Customer}" />
+                <DataGridTextColumn Header="پرونده" Binding="{Binding CaseNumber}" />
+                <DataGridTextColumn Header="حجم" Binding="{Binding Size}" />
+                <DataGridTextColumn Header="تاریخ" Binding="{Binding Date}" />
+                <DataGridTextColumn Header="ثبت‌کننده" Binding="{Binding CreatedBy}" />
+                <DataGridTextColumn Header="SHA-256" Binding="{Binding Sha256}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

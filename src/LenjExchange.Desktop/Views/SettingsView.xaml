@@ -1,0 +1,114 @@
+<UserControl x:Class="LenjExchange.Desktop.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:v="clr-namespace:LenjExchange.Desktop.Views"
+             xmlns:vm="clr-namespace:LenjExchange.Desktop.ViewModels">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,6">
+            <Button Content="ذخیره همه تنظیمات" Command="{Binding SaveCommand}" Margin="0,0,8,0" />
+            <Button Content="باز کردن پوشه داده‌ها" Command="{Binding OpenDataFolderCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0" />
+            <TextBlock Text="{Binding DataFolder}" Style="{StaticResource Muted}" VerticalAlignment="Center" FlowDirection="LeftToRight" />
+        </StackPanel>
+        <v:MessageBar DockPanel.Dock="Top" />
+        <TabControl>
+            <TabItem Header="سربرگ شرکت">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="8" MaxWidth="760" HorizontalAlignment="Right" DataContext="{Binding Company}">
+                        <TextBlock Text="نام فارسی شرکت" Style="{StaticResource FieldLabel}" />
+                        <TextBox Text="{Binding PersianName, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="نام انگلیسی شرکت" Style="{StaticResource FieldLabel}" />
+                        <TextBox Text="{Binding EnglishName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                        <UniformGrid Columns="2">
+                            <StackPanel Margin="0,0,8,0">
+                                <TextBlock Text="ستون ۱ — عنوان (ایران)" Style="{StaticResource FieldLabel}" />
+                                <TextBox Text="{Binding IranLabel, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="نشانی" Style="{StaticResource FieldLabel}" />
+                                <TextBox Text="{Binding IranAddress, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="تلفن‌ها / راه ارتباطی" Style="{StaticResource FieldLabel}" />
+                                <TextBox Text="{Binding IranContact, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                            </StackPanel>
+                            <StackPanel Margin="8,0,0,0">
+                                <TextBlock Text="ستون ۲ — عنوان (چین)" Style="{StaticResource FieldLabel}" />
+                                <TextBox Text="{Binding ChinaLabel, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="نشانی" Style="{StaticResource FieldLabel}" />
+                                <TextBox Text="{Binding ChinaAddress, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                                <TextBlock Text="تلفن / ایمیل" Style="{StaticResource FieldLabel}" />
+                                <TextBox Text="{Binding ChinaContact, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                            </StackPanel>
+                        </UniformGrid>
+                        <TextBlock Text="متن پانویس رسید" Style="{StaticResource FieldLabel}" />
+                        <TextBox Text="{Binding FooterText, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="لوگو (خالی = لوگوی پیش‌فرض لنج)" Style="{StaticResource FieldLabel}" />
+                        <DockPanel>
+                            <Button DockPanel.Dock="Left" Content="حذف" Command="{Binding DataContext.ClearLogoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource SecondaryButton}" Margin="6,0,0,0" />
+                            <Button DockPanel.Dock="Left" Content="انتخاب…" Command="{Binding DataContext.PickLogoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource SecondaryButton}" Margin="6,0,0,0" />
+                            <TextBox Text="{Binding LogoPath}" IsReadOnly="True" Style="{StaticResource LtrInput}" />
+                        </DockPanel>
+                        <UniformGrid Columns="2">
+                            <StackPanel Margin="0,0,8,0">
+                                <TextBlock Text="رنگ اصلی (#RRGGBB)" Style="{StaticResource FieldLabel}" />
+                                <TextBox Text="{Binding PrimaryColor, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                            </StackPanel>
+                            <StackPanel Margin="8,0,0,0">
+                                <TextBlock Text="رنگ نام فارسی (#RRGGBB)" Style="{StaticResource FieldLabel}" />
+                                <TextBox Text="{Binding SecondaryColor, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                            </StackPanel>
+                        </UniformGrid>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="شماره‌گذاری">
+                <StackPanel Margin="8" MaxWidth="620" HorizontalAlignment="Right">
+                    <Border Style="{StaticResource WarningBox}">
+                        <TextBlock TextWrapping="Wrap" Text="نشانه‌ها: {yyyy} سال شمسی، {yy} دو رقم سال، {MM} ماه، {dd} روز، {seq:3} شماره ترتیبی با ۳ رقم. الگوی پیش‌فرض YI{yyyy}{MM}{seq:3}LE نمونه YI140507126LE را می‌سازد؛ معنای دقیق شماره هنوز باید توسط شرکت تأیید شود." />
+                    </Border>
+                    <TextBlock Text="الگوی شماره رسید" Style="{StaticResource FieldLabel}" />
+                    <TextBox Text="{Binding ReceiptPattern, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                    <TextBlock Text="بازنشانی شماره ترتیبی" Style="{StaticResource FieldLabel}" />
+                    <ComboBox ItemsSource="{Binding Scopes}" SelectedItem="{Binding ReceiptScope}" />
+                    <TextBlock Text="{Binding NumberPreview}" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}" Margin="0,8,0,0" />
+                    <TextBlock Text="الگوی شماره پرونده" Style="{StaticResource FieldLabel}" />
+                    <TextBox Text="{Binding CasePattern, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="مسیرها">
+                <StackPanel Margin="8" MaxWidth="760" HorizontalAlignment="Right">
+                    <TextBlock Text="پوشه رسیدهای PDF" Style="{StaticResource FieldLabel}" />
+                    <DockPanel>
+                        <Button DockPanel.Dock="Left" Content="انتخاب…" Command="{Binding PickFolderCommand}" CommandParameter="receipts" Style="{StaticResource SecondaryButton}" Margin="6,0,0,0" />
+                        <TextBox Text="{Binding ReceiptsRoot, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                    </DockPanel>
+                    <TextBlock Text="پوشه گزارش‌ها" Style="{StaticResource FieldLabel}" />
+                    <DockPanel>
+                        <Button DockPanel.Dock="Left" Content="انتخاب…" Command="{Binding PickFolderCommand}" CommandParameter="reports" Style="{StaticResource SecondaryButton}" Margin="6,0,0,0" />
+                        <TextBox Text="{Binding ReportsRoot, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                    </DockPanel>
+                    <TextBlock Text="پوشه پشتیبان‌ها (ترجیحاً روی دیسک یا درایو دیگر)" Style="{StaticResource FieldLabel}" />
+                    <DockPanel>
+                        <Button DockPanel.Dock="Left" Content="انتخاب…" Command="{Binding PickFolderCommand}" CommandParameter="backup" Style="{StaticResource SecondaryButton}" Margin="6,0,0,0" />
+                        <TextBox Text="{Binding BackupRoot, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="پشتیبان‌گیری خودکار">
+                <StackPanel Margin="8" MaxWidth="500" HorizontalAlignment="Right">
+                    <CheckBox Content="پشتیبان‌گیری خودکار فعال باشد" IsChecked="{Binding AutoBackup}" Margin="0,4" />
+                    <TextBlock Text="فاصله (ساعت)" Style="{StaticResource FieldLabel}" />
+                    <TextBox Text="{Binding IntervalHours, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                    <TextBlock Text="تعداد نسخه‌های نگه‌داری‌شده" Style="{StaticResource FieldLabel}" />
+                    <TextBox Text="{Binding KeepVersions, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LtrInput}" />
+                    <CheckBox Content="هنگام خروج از برنامه پشتیبان گرفته شود" IsChecked="{Binding BackupOnExit}" Margin="0,10,0,0" />
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="حسابداری">
+                <StackPanel Margin="8" MaxWidth="560" HorizontalAlignment="Right">
+                    <TextBlock Text="ارز مبنای گزارش (معادل ردیف‌ها)" Style="{StaticResource FieldLabel}" />
+                    <ComboBox ItemsSource="{x:Static vm:ViewModelBase.AllCurrencies}" SelectedItem="{Binding BaseCurrency}" />
+                    <TextBlock Text="اندازه پیش‌فرض کاغذ رسید" Style="{StaticResource FieldLabel}" />
+                    <ComboBox ItemsSource="{Binding PaperSizes}" SelectedItem="{Binding DefaultPaper}" />
+                    <CheckBox Content="اپراتور بتواند رسید با مغایرت جمع واریزها را ثبت کند (اختلاف به حساب مغایرت می‌رود)" IsChecked="{Binding AllowMismatch}" Margin="0,12,0,0" />
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</UserControl>

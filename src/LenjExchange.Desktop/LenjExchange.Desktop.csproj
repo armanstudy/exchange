@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <!-- Lets the WPF project build on Linux/macOS CI. It can only run on Windows. -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <RootNamespace>LenjExchange.Desktop</RootNamespace>
+    <AssemblyName>LenjExchange</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <ApplicationIcon>Assets\lenj.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <!-- Used by installer/publish.ps1: self-contained single-file win-x64 build. -->
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LenjExchange.Application\LenjExchange.Application.csproj" />
+    <ProjectReference Include="..\LenjExchange.Infrastructure\LenjExchange.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(MsExtVersion)" />
+    <PackageReference Include="Serilog" Version="4.2.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="..\LenjExchange.Infrastructure\Assets\Fonts\Vazirmatn-Regular.ttf" Link="Assets\Fonts\Vazirmatn-Regular.ttf" />
+    <Resource Include="..\LenjExchange.Infrastructure\Assets\Fonts\Vazirmatn-Bold.ttf" Link="Assets\Fonts\Vazirmatn-Bold.ttf" />
+    <Resource Include="..\LenjExchange.Infrastructure\Assets\Logo\lenj-logo.png" Link="Assets\lenj-logo.png" />
+    <Resource Include="Assets\lenj.ico" />
+  </ItemGroup>
+
+</Project>
