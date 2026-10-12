@@ -9,6 +9,10 @@
     <Version>0.1.0</Version>
     <NeutralLanguage>fa-IR</NeutralLanguage>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <!-- Keeps the single-file publish folder to one EXE (no loose .pdb files). -->
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
   <PropertyGroup>
     <EfCoreVersion>8.0.31</EfCoreVersion>
     <MsExtVersion>8.0.1</MsExtVersion>
