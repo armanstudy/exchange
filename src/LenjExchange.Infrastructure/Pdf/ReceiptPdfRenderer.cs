@@ -1,3 +1,4 @@
+using LenjExchange.Domain.Text;
 using LenjExchange.Application.Documents;
 using LenjExchange.Domain.Documents;
 using QuestPDF.Fluent;
@@ -47,7 +48,7 @@ public sealed class ReceiptPdfRenderer : IReceiptPdfRenderer
                         t.Cell().Background(h.LightColor).PaddingVertical(8).PaddingHorizontal(8)
                             .Text(label).Bold().FontColor(h.PrimaryColor);
                         t.Cell().Background(alt ? h.BackgroundColor : Colors.White).PaddingVertical(8).PaddingHorizontal(8)
-                            .Text(value);
+                            .Text(BidiText.IsolateLatinRuns(value));
                         alt = !alt;
                     }
                 });

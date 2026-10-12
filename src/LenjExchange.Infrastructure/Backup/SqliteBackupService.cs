@@ -132,8 +132,15 @@ public sealed class SqliteBackupService : IBackupService
             {
                 var tmp = Path.Combine(work.FullName, "verify.db");
                 dbEntry.ExtractToFile(tmp);
-                var result = IntegrityCheck(tmp);
-                if (!(result.Count == 1 && result[0] == "ok")) problems.Add("PRAGMA integrity_check: " + string.Join("; ", result));
+                try
+                {
+                    var result = IntegrityCheck(tmp);
+                    if (!(result.Count == 1 && result[0] == "ok")) problems.Add("PRAGMA integrity_check: " + string.Join("; ", result));
+                }
+                catch (SqliteException ex)
+                {
+                    problems.Add("پایگاه دادهٔ پشتیبان قابل باز شدن نیست: " + ex.Message);
+                }
             }
         }
         catch (InvalidDataException ex)

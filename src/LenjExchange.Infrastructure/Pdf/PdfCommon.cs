@@ -1,3 +1,4 @@
+using LenjExchange.Domain.Text;
 using LenjExchange.Application.Settings;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -7,6 +8,7 @@ namespace LenjExchange.Infrastructure.Pdf;
 
 internal static class PdfCommon
 {
+
     public static void CompanyHeader(IContainer container, CompanyHeader h, string title, string? rightInfo, string? leftInfo)
     {
         container.Column(col =>
@@ -31,9 +33,9 @@ internal static class PdfCommon
             col.Item().PaddingTop(6).Height(3).Background(h.PrimaryColor);
             col.Item().PaddingTop(8).Row(row =>
             {
-                row.RelativeItem().AlignLeft().Text(rightInfo ?? "").FontSize(9).FontColor(h.MutedTextColor);
+                row.RelativeItem().AlignRight().Text(BidiText.IsolateLatinRuns(rightInfo)).FontSize(9).FontColor(h.MutedTextColor);
                 row.RelativeItem().AlignCenter().Text(title).Bold().FontSize(15).FontColor(h.PrimaryColor);
-                row.RelativeItem().AlignRight().Text(leftInfo ?? "").FontSize(9).FontColor(h.MutedTextColor);
+                row.RelativeItem().AlignLeft().Text(BidiText.IsolateLatinRuns(leftInfo)).FontSize(9).FontColor(h.MutedTextColor);
             });
         });
     }

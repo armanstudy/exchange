@@ -1,3 +1,4 @@
+using LenjExchange.Domain.Text;
 using LenjExchange.Application.Documents;
 using LenjExchange.Application.Reporting;
 using LenjExchange.Application.Settings;
@@ -31,10 +32,10 @@ public sealed class ReportPdfRenderer : IReportPdfRenderer
                     foreach (var s in report.Sections)
                     {
                         Cell(t, h, alt, s.Currency.ToString());
-                        Cell(t, h, alt, Amt(s.Opening, s.Currency));
+                        Cell(t, h, alt, $"{Amt(Math.Abs(s.Opening), s.Currency)} {SideShort(s.Opening)}");
                         Cell(t, h, alt, Amt(s.TotalDebit, s.Currency));
                         Cell(t, h, alt, Amt(s.TotalCredit, s.Currency));
-                        Cell(t, h, alt, Amt(s.Closing, s.Currency));
+                        Cell(t, h, alt, Amt(Math.Abs(s.Closing), s.Currency));
                         Cell(t, h, alt, StatementCurrencySection.Side(s.Closing));
                         alt = !alt;
                     }
@@ -42,7 +43,7 @@ public sealed class ReportPdfRenderer : IReportPdfRenderer
 
                 foreach (var s in report.Sections)
                 {
-                    col.Item().PaddingTop(8).Text($"ارز {s.Currency} — مانده ابتدای دوره: {Amt(s.Opening, s.Currency)} ({StatementCurrencySection.Side(s.Opening)})")
+                    col.Item().PaddingTop(8).Text(BidiText.IsolateLatinRuns($"ارز {s.Currency} — مانده ابتدای دوره: {Amt(Math.Abs(s.Opening), s.Currency)} ({StatementCurrencySection.Side(s.Opening)})"))
                         .Bold().FontColor(h.PrimaryColor);
                     col.Item().Table(t =>
                     {
@@ -69,8 +70,8 @@ public sealed class ReportPdfRenderer : IReportPdfRenderer
                             alt = !alt;
                         }
                     });
-                    col.Item().PaddingTop(2).Text(
-                        $"جمع بدهکار: {Amt(s.TotalDebit, s.Currency)}   جمع بستانکار: {Amt(s.TotalCredit, s.Currency)}   مانده پایان دوره: {Amt(Math.Abs(s.Closing), s.Currency)} ({StatementCurrencySection.Side(s.Closing)})")
+                    col.Item().PaddingTop(2).Text(BidiText.IsolateLatinRuns(
+                        $"جمع بدهکار: {Amt(s.TotalDebit, s.Currency)}   جمع بستانکار: {Amt(s.TotalCredit, s.Currency)}   مانده پایان دوره: {Amt(Math.Abs(s.Closing), s.Currency)} ({StatementCurrencySection.Side(s.Closing)})"))
                         .FontSize(9).Bold();
                 }
                 if (report.Sections.Count == 0)
@@ -146,7 +147,7 @@ public sealed class ReportPdfRenderer : IReportPdfRenderer
     }
 
     private static void Cell(TableDescriptor t, CompanyHeader h, bool alt, string text) =>
-        t.Cell().Element(c => PdfCommon.BodyCell(c, h, alt)).Text(text);
+        t.Cell().Element(c => PdfCommon.BodyCell(c, h, alt)).Text(BidiText.IsolateLatinRuns(text));
 
     private static string Amt(decimal v, CurrencyCode c) => AmountFormatter.Format(v, c);
 
