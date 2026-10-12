@@ -87,11 +87,10 @@ public sealed class UnitOfWork
     public Task ExecuteAsync(Func<Task> work, CancellationToken ct = default) =>
         ExecuteAsync(async () => { await work(); return true; }, ct);
 
+    /// <summary>After a rollback the tracked graph no longer matches the database, so it is discarded entirely.</summary>
     private void DetachPending()
     {
-        if (_db is DbContext ctx)
-            foreach (var e in ctx.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged).ToList())
-                e.State = EntityState.Detached;
+        if (_db is DbContext ctx) ctx.ChangeTracker.Clear();
     }
 }
 

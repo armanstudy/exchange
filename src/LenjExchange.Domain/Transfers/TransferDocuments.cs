@@ -42,8 +42,8 @@ public class ExchangerCommitment : AuditableEntity
             CommittedAmount = CurrencyMath.ConvertFixed(Paid, committedCurrency).Amount;
         else
         {
-            Rate = rate ?? throw new DomainException("rate_required", "نرخ تعهد صرافی الزامی است.");
-            CommittedAmount = rate.Convert(Paid, committedCurrency).Amount;
+            Rate = (rate ?? throw new DomainException("rate_required", "نرخ تعهد صرافی الزامی است.")) with { };
+            CommittedAmount = Rate.Convert(Paid, committedCurrency).Amount;
         }
     }
 
@@ -178,8 +178,8 @@ public class ChinaReceipt : AuditableEntity
             PaidAmount = SettledUsdAmount;
         else
         {
-            Rate = rate ?? throw new DomainException("rate_required", $"برای پرداخت به {paidCurrency} نرخ توافقی الزامی است.");
-            PaidAmount = rate.Convert(SettledUsd, paidCurrency).Amount;
+            Rate = (rate ?? throw new DomainException("rate_required", $"برای پرداخت به {paidCurrency} نرخ توافقی الزامی است.")) with { };
+            PaidAmount = Rate.Convert(SettledUsd, paidCurrency).Amount;
         }
     }
 

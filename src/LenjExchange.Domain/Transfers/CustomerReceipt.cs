@@ -59,9 +59,10 @@ public class CustomerReceipt : AuditableEntity
         }
         else
         {
-            Rate = rate ?? throw new DomainException("rate_required",
-                $"برای تبدیل {amount.Currency} به {targetCurrency} وارد کردن نرخ الزامی است.");
-            TargetAmount = rate.Convert(Total, targetCurrency).Amount;
+            // Copy: each document owns its own rate snapshot.
+            Rate = (rate ?? throw new DomainException("rate_required",
+                $"برای تبدیل {amount.Currency} به {targetCurrency} وارد کردن نرخ الزامی است.")) with { };
+            TargetAmount = Rate.Convert(Total, targetCurrency).Amount;
         }
     }
 
